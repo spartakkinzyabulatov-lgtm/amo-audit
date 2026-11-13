@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Аудит amoCRM — SolutionCRM</title>
+  <meta name="description" content="Проверьте настройку amoCRM по чек-листу за 10–15 минут и получите список, что исправить.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M2 6h20l8 10-8 10H2l8-10z' fill='%233e8bb4'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" data-action="home" aria-label="На старт">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>SolutionCRM</span>
+    </a>
+    <span class="topbar-title">Аудит amoCRM</span>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+
+  <footer class="footer">
+    <div class="backup">
+      <p class="backup-note">Ответы хранятся только в этом браузере. Сохраните копию, чтобы не потерять их при очистке браузера.</p>
+      <div class="backup-actions">
+        <button type="button" class="btn btn-ghost btn-sm" data-action="export">Скачать копию данных</button>
+        <label class="btn btn-ghost btn-sm file-btn">
+          Загрузить копию
+          <input type="file" accept="application/json,.json" id="importFile">
+        </label>
+      </div>
+    </div>
+    <p class="footer-sign">Чек-лист подготовила команда SolutionCRM — внедрение и сопровождение amoCRM.</p>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
