@@ -240,6 +240,18 @@ button, input { font: inherit; color: inherit; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
 /* ---------- телефон ---------- */
+/* ---------- блок «Полезное от SolutionCRM» (data.json) ---------- */
+.tips { margin-top: 40px; }
+.tips-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.tip-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-m); padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+.tip-type { align-self: flex-start; font-size: 13px; font-weight: 600; color: var(--deep); background: var(--stage); padding: 2px 10px; border-radius: 999px; }
+.tip-title { margin: 0; font-weight: 600; }
+.tip-text { margin: 0; font-size: 15px; color: var(--ink-soft); }
+.tip-link { margin-top: auto; padding-top: 4px; color: var(--blue); font-weight: 600; min-height: 44px; display: inline-flex; align-items: center; }
+.tips-note { margin: 0; }
+.tips-error { margin: 0; background: var(--amber-bg); padding: 14px 16px; border-radius: var(--radius-s); }
+.tips-updated { font-size: 14px; margin: 12px 0 0; }
+
 @media (max-width: 560px) {
   body { font-size: 16px; }
   .topbar-title { display: none; }
@@ -259,6 +271,7 @@ button, input { font: inherit; color: inherit; }
 }
 
 @media print {
+  .tips { display: none; }
   .topbar, .footer, .actions, .toast, .nav-row { display: none !important; }
   body { background: #fff; }
 }

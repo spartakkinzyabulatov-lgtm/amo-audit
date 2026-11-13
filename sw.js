@@ -2,9 +2,10 @@
 //
 // ВАЖНО: при КАЖДОЙ выкладке изменений повышайте VERSION (v1 → v2 → v3 …).
 // Иначе телефон продолжит показывать старую сохранённую версию.
-var VERSION = "v1";
+var VERSION = "v2";
 var CACHE = "amo-audit-" + VERSION;
 var FONTS_CACHE = "amo-audit-fonts"; // шрифты Google не меняются, их кэш между версиями не чистим
+var DATA_CACHE = "amo-audit-data";   // последний data.json — чтобы без интернета были видны прошлые данные
 
 // Файлы приложения, которые сохраняем сразу при установке.
 var CORE = [
@@ -32,7 +33,7 @@ self.addEventListener("activate", function (event) {
   event.waitUntil(
     caches.keys().then(function (keys) {
       return Promise.all(keys.map(function (key) {
-        if (key !== CACHE && key !== FONTS_CACHE) return caches.delete(key);
+        if (key !== CACHE && key !== FONTS_CACHE && key !== DATA_CACHE) return caches.delete(key);
       }));
     }).then(function () { return self.clients.claim(); })
   );
@@ -60,6 +61,24 @@ self.addEventListener("fetch", function (event) {
   }
 
   if (url.origin !== self.location.origin) return;
+
+  // data.json обновляется сам по расписанию: сначала берём свежий из сети,
+  // без интернета — последний сохранённый.
+  if (url.pathname.endsWith("/data.json")) {
+    event.respondWith(
+      caches.open(DATA_CACHE).then(function (cache) {
+        return fetch(req, { cache: "no-store" }).then(function (res) {
+          if (res.ok) cache.put("data.json", res.clone());
+          return res;
+        }).catch(function () {
+          return cache.match("data.json").then(function (hit) {
+            return hit || Response.error();
+          });
+        });
+      })
+    );
+    return;
+  }
 
   // Файлы приложения: сначала из сохранённой версии (быстро и без интернета), иначе из сети.
   event.respondWith(

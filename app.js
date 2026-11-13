@@ -18,6 +18,7 @@
   var toastEl = document.getElementById("toast");
   var state = load();
   var screen = "start";
+  var tips = { status: "loading", items: [], updated: null };
 
   // ---------- хранение ----------
   function emptyState() {
@@ -144,6 +145,51 @@
     }).join("") + "</ol>";
   }
 
+  // ---------- блок «Полезное от SolutionCRM» (data.json обновляется сам по расписанию) ----------
+  function loadTips() {
+    fetch("data.json?t=" + Date.now(), { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (d) {
+        if (!d || !Array.isArray(d.items)) throw new Error("format");
+        tips = { status: "ok", items: d.items, updated: d.updated || null };
+      })
+      .catch(function () { tips = { status: "error", items: [], updated: null }; })
+      .then(function () {
+        var box = document.getElementById("tips");
+        if (box) box.outerHTML = tipsHTML();
+      });
+  }
+  function updatedText(iso) {
+    var d = new Date(iso);
+    if (!iso || isNaN(d)) return "";
+    return d.toLocaleString("ru-RU", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  }
+  function tipsHTML() {
+    var body;
+    if (tips.status === "loading") {
+      body = '<p class="muted tips-note">Загружаем…</p>';
+    } else if (tips.status === "error") {
+      body = '<p class="tips-error">Не получилось загрузить советы. Проверьте интернет и обновите страницу. Чек-лист работает и без них.</p>';
+    } else if (!tips.items.length) {
+      body = '<p class="muted tips-note">Скоро здесь появятся советы.</p>';
+    } else {
+      body = '<ul class="tips-list">' + tips.items.map(function (t) {
+        var url = /^https?:\/\//.test(t.url || "") ? t.url : "";
+        return '<li class="tip-card">' +
+          (t.type ? '<span class="tip-type">' + esc(t.type) + "</span>" : "") +
+          (t.title ? '<p class="tip-title">' + esc(t.title) + "</p>" : "") +
+          (t.text ? '<p class="tip-text">' + esc(t.text) + "</p>" : "") +
+          (url ? '<a class="tip-link" href="' + esc(url) + '" target="_blank" rel="noopener">Подробнее</a>' : "") +
+          "</li>";
+      }).join("") + "</ul>";
+    }
+    var upd = tips.status === "ok" ? updatedText(tips.updated) : "";
+    return '<section class="tips" id="tips" aria-labelledby="tipsTitle">' +
+      '<h2 class="section-title" id="tipsTitle">Полезное от SolutionCRM</h2>' + body +
+      (upd ? '<p class="muted tips-updated">Обновлено ' + upd + "</p>" : "") +
+      "</section>";
+  }
+
   // ---------- экраны ----------
   function renderStart() {
     var items = allItems(), done = answeredCount(items);
@@ -166,7 +212,7 @@
         '</div>' +
         (started ? '<p class="muted resume-note">Отвечено ' + done + ' из ' + items.length + '. Ответы сохранены на этом устройстве.</p>' : "") +
         '<p class="muted privacy">Ответы никуда не отправляются: они хранятся только в вашем браузере.</p>' +
-      '</section>';
+      '</section>' + tipsHTML();
   }
 
   function itemHTML(it) {
@@ -236,7 +282,7 @@
           '<button type="button" class="btn btn-ghost" data-action="edit">Вернуться к ответам</button>' +
           '<button type="button" class="btn btn-ghost btn-danger" data-action="reset">Начать заново</button>' +
         '</div>' +
-      '</section>';
+      '</section>' + tipsHTML();
   }
 
   function render() {
@@ -412,4 +458,5 @@
   });
 
   render();
+  loadTips();
 })();

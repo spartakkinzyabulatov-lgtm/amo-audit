@@ -1,0 +1,38 @@
+# Обновляет data.json (блок «Полезное от SolutionCRM») из Google Таблицы.
+# Расписание: каждый день в 07:17 по Екатеринбургу = 02:17 UTC (Екатеринбург = UTC+5).
+# Ручной запуск: вкладка Actions → «Обновить данные» → Run workflow.
+name: Обновить данные
+
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Забрать данные из таблицы
+        run: python3 fetch.py
+
+      - name: Сохранить data.json в репозиторий
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          if git diff --cached --quiet; then
+            echo "Изменений нет"
+          else
+            git commit -m "Данные обновлены автоматически"
+            git push
+          fi
