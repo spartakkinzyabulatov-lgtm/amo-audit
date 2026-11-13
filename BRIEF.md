@@ -69,6 +69,7 @@
 
 ## Публикация
 Приложение выложено в двух местах, оба обновляются сами из одного репозитория.
+- **Выкладка по умолчанию:** GitHub Pages + Vercel (выбор Спартака 13.11.2026).
 - **Vercel:** https://amo-audit-hzkf.vercel.app (тариф Hobby, команда «Solution», проект `amo-audit-hzkf`, выложено 13.11.2026).
 - **GitHub Pages:** https://spartakkinzyabulatov-lgtm.github.io/amo-audit/
 - Репозиторий (публичный): https://github.com/spartakkinzyabulatov-lgtm/amo-audit
@@ -90,3 +91,6 @@
 - `fetch.py` скачивает таблицу и пишет `data.json` (с датой обновления). Не ответила таблица — `data.json` не трогается.
 - `.github/workflows/update.yml` запускает `fetch.py` каждый день в 07:17 по Екатеринбургу (02:17 UTC). Вручную: GitHub → Actions → «Обновить данные» → Run workflow.
 - GitHub может запускать задание с опозданием на 5–15 минут. Если в репозитории 60 дней нет изменений, расписание выключится само — включается кнопкой Enable workflow в Actions.
+
+## История изменений
+- 13.11.2026 — заголовок в шапке и вкладке: «Аудит amoCRM за 15 минут» (sw v4), выложено на GitHub Pages + Vercel.

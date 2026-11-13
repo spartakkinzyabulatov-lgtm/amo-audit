@@ -2,7 +2,7 @@
 //
 // ВАЖНО: при КАЖДОЙ выкладке изменений повышайте VERSION (v1 → v2 → v3 …).
 // Иначе телефон продолжит показывать старую сохранённую версию.
-var VERSION = "v3";
+var VERSION = "v4";
 var CACHE = "amo-audit-" + VERSION;
 var FONTS_CACHE = "amo-audit-fonts"; // шрифты Google не меняются, их кэш между версиями не чистим
 var DATA_CACHE = "amo-audit-data";   // последний data.json — чтобы без интернета были видны прошлые данные
